@@ -1,199 +1,213 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <time.h>
+
+#define MAX_RESERVATIONS 1000
+
+typedef struct {
+    char name[100];
+    char phone[100];
+    char datetime[100];
+    char clock[100];
+} Reservation;
 
 int main(void) {
-  int a, b, c;
-  int l = 0;
+    int a, b;
+    int l = 0;
 
-  // 字符串陣列來存儲時間值
-  const char* dailytime[13] = {"9", "10", "11", "12", "13", "14", "15",
-                               "16", "17", "18", "19", "20", "21"};
+    // Array of strings to store time values
+    const char* dailytime[13] = {"9", "10", "11", "12", "13", "14", "15",
+                                 "16", "17", "18", "19", "20", "21"};
 
-  char tell[1000], n[1000], date[1000], time[1000];
-  char name[1000][1000], phone[1000][1000], datetime[1000][1000],
-      clock[1000][1000];
-
-  while (1) {
-    printf("\033[1;34m.w.定位系統\n");
-    printf("\033[1;34m======使用資訊======\n");
-    printf("\033[1;34m1.新增訂位資料\n");
-    printf("\033[1;34m2.變更訂位資料\n");
-    printf("\033[1;34m3.取消訂位資料\n");
-    printf("\033[1;34m4.查詢訂位資料\n");
-    printf("\033[0m====================\n");
-
-    // 輸入功能
-    printf("\033[1;34m請輸入你要的功能.w.\n");
-    scanf("%d", &a);
-
-    switch (a) // 輸入資料
-    {
-      case 1: {
-        printf("請輸入您的大名!!:");
-        scanf("%s", n);
-        printf("請輸入電話號碼:");
-        scanf("%s", tell);
-
-        // 檢查是否定位
-        int found = 0;
-        for (int i = 0; i < 1000; i++) {
-          if (strcmp(tell, phone[i]) == 0) {
-            found = 1;
-            break;
-          }
-        }
-
-        if (found) {
-          printf("已有定位\n");
-          printf("您的資料如下\n");
-          printf("大名:%s\n", n);
-          printf("電話號碼:%s\n", tell);
-          printf("定位日期:%s\n", date);
-          printf("定位時間:%s點\n", time);
-        } else {
-          strcpy(phone[l], tell);
-          strcpy(name[l], n);
-          l++;
-          printf("請輸入日期:");
-          scanf("%s", date);
-          printf("請輸入時間:");
-          scanf("%s", time);
-
-          int found2 = 0;
-          for (int j = 0; j < 1000; j++) {
-            if (strcmp(time, clock[j]) == 0 && strcmp(date, datetime[j]) == 0) {
-              found2 = 1;
-              break;
-            }
-          }
-
-          if (found2) {
-            printf("已滿位\n");
-            printf("以下是合理的時間\n");
-            for (int k = 0; k < 13; k++) {
-              printf("時間:%s\n", dailytime[k]);
-            }
-          } else {
-            strcpy(datetime[l-1], date);
-            strcpy(clock[l-1], time);
-            printf("已新增定位\n");
-          }
-        }
-        break;
-      }
-
-      case 2: {
-        printf("請輸入名字:");
-        scanf("%s", n);
-        printf("請輸入電話號碼:");
-        scanf("%s", tell);
-
-        int found3 = 0;
-        int p = -1; // 用於保存匹配的索引
-        for (int i = 0; i < 1000; i++) {
-          if (strcmp(phone[i], tell) == 0 && strcmp(name[i], n) == 0) {
-            found3 = 1;
-            p = i;
-            break;
-          }
-        }
-
-        if (found3) {
-          printf("請問你要修改日期嗎? (1是/0否)\n");
-          scanf("%d", &b);
-          if (b == 1) {
-            printf("請輸入新日期:");
-            scanf("%s", date);
-          }
-
-          printf("請輸入新時間:");
-          scanf("%s", time);
-
-          int found4 = 0;
-          for (int m = 0; m < 1000; m++) {
-            if (strcmp(time, clock[m]) == 0 && strcmp(date, datetime[m]) == 0) {
-              found4 = 1;
-              break;
-            }
-          }
-
-          if (found4) {
-            printf("已滿位\n");
-            printf("以下是合理的時間\n");
-            for (int k = 0; k < 13; k++) {
-              printf("時間:%s\n", dailytime[k]);
-            }
-          } else {
-            if (b == 1) {
-              strcpy(datetime[p], date); // 修改日期
-            }
-            strcpy(clock[p], time); // 修改時間
-            printf("已修改\n");
-          }
-        } else {
-          printf("未找到匹配的記錄\n");
-        }
-        break;
-      }
-
-      case 3: {
-        printf("請輸入名字:");
-        scanf("%s", n);
-        printf("請輸入電話號碼:");
-        scanf("%s", tell);
-
-        int found5 = 0;
-        for (int q = 0; q < 1000; q++) {
-          if (strcmp(phone[q], tell) == 0 && strcmp(name[q], n) == 0) {
-            found5 = 1;
-            for (int r = q; r < 999; r++) {
-              strcpy(name[r], name[r + 1]);
-              strcpy(phone[r], phone[r + 1]);
-              strcpy(datetime[r], datetime[r + 1]);
-              strcpy(clock[r], clock[r + 1]);
-            }
-            l--;
-            break;
-          }
-        }
-
-        if (found5) {
-          printf("已取消\n");
-        } else {
-          printf("未找到匹配的記錄\n");
-        }
-        break;
-      }
-
-      case 4: {
-        printf("請輸入電話號碼:");
-        scanf("%s", tell);
-
-        int found6 = 0;
-        for (int s = 0; s < 1000; s++) {
-          if (strcmp(phone[s], tell) == 0) {
-            found6 = 1;
-            printf("大名:%s\n", name[s]);
-            printf("電話號碼:%s\n", phone[s]);
-            printf("定位日期:%s\n", datetime[s]);
-            printf("定位時間:%s點\n", clock[s]);
-            break;
-          }
-        }
-
-        if (!found6) {
-          printf("未找到匹配的記錄\n");
-        }
-        break;
-      }
-
-      default: {
-        printf("無效的選項\n");
-        break;
-      }
+    char tell[100], n[100], date[100], time[100];
+    Reservation* reservations = (Reservation*)malloc(MAX_RESERVATIONS * sizeof(Reservation));
+    if (reservations == NULL) {
+        printf("Memory allocation failed\n");
+        return 1;
     }
-  }
 
-  return 0;
+    printf("Hello world\n");
+
+    while (1) {
+        printf("\033[1;34mReservation System\n");
+        printf("\033[1;34m======Menu======\n");
+        printf("\033[1;34m1. Add Reservation\n");
+        printf("\033[1;34m2. Modify Reservation\n");
+        printf("\033[1;34m3. Cancel Reservation\n");
+        printf("\033[1;34m4. View Reservation\n");
+        printf("\033[0m====================\n");
+
+        // Enter the function
+        printf("\033[1;34mPlease enter the function you want.\n");
+        scanf("%d", &a);
+
+        switch (a) // Enter data
+        {
+            case 1: {
+                printf("Please enter your name:");
+                scanf("%s", n);
+                printf("Please enter your phone number:");
+                scanf("%s", tell);
+
+                // Check if reservation already exists
+                int found = 0;
+                for (int i = 0; i < l; i++) {
+                    if (strcmp(tell, reservations[i].phone) == 0) {
+                        found = 1;
+                        break;
+                    }
+                }
+
+                if (found) {
+                    printf("Reservation already exists\n");
+                    printf("Your information is as follows\n");
+                    for (int i = 0; i < l; i++) {
+                        if (strcmp(tell, reservations[i].phone) == 0) {
+                            printf("Name: %s\n", reservations[i].name);
+                            printf("Phone number: %s\n", reservations[i].phone);
+                            printf("Reservation date: %s\n", reservations[i].datetime);
+                            printf("Reservation time: %s o'clock\n", reservations[i].clock);
+                        }
+                    }
+                } else {
+                    strcpy(reservations[l].phone, tell);
+                    strcpy(reservations[l].name, n);
+                    printf("Please enter the date:");
+                    scanf("%s", date);
+                    printf("Please enter the time:");
+                    scanf("%s", time);
+
+                    int found2 = 0;
+                    for (int j = 0; j < l; j++) {
+                        if (strcmp(time, reservations[j].clock) == 0 && strcmp(date, reservations[j].datetime) == 0) {
+                            found2 = 1;
+                            break;
+                        }
+                    }
+
+                    if (found2) {
+                        printf("Fully booked\n");
+                        printf("Here are some available times\n");
+                        for (int k = 0; k < 13; k++) {
+                            printf("Time: %s\n", dailytime[k]);
+                        }
+                    } else {
+                        strcpy(reservations[l].datetime, date);
+                        strcpy(reservations[l].clock, time);
+                        l++;
+                        printf("Reservation added\n");
+                    }
+                }
+                break;
+            }
+
+            case 2: {
+                printf("Please enter your name:");
+                scanf("%s", n);
+                printf("Please enter your phone number:");
+                scanf("%s", tell);
+
+                int found3 = 0;
+                int p = -1; // Used to save the matching index
+                for (int i = 0; i < l; i++) {
+                    if (strcmp(reservations[i].phone, tell) == 0 && strcmp(reservations[i].name, n) == 0) {
+                        found3 = 1;
+                        p = i;
+                        break;
+                    }
+                }
+
+                if (found3) {
+                    printf("Do you want to change the date? (1 yes / 0 no)\n");
+                    scanf("%d", &b);
+                    if (b == 1) {
+                        printf("Please enter the new date:");
+                        scanf("%s", date);
+                        strcpy(reservations[p].datetime, date); // Modify the date
+                    }
+
+                    printf("Please enter the new time:");
+                    scanf("%s", time);
+
+                    int found4 = 0;
+                    for (int m = 0; m < l; m++) {
+                        if (strcmp(time, reservations[m].clock) == 0 && strcmp(date, reservations[m].datetime) == 0) {
+                            found4 = 1;
+                            break;
+                        }
+                    }
+
+                    if (found4) {
+                        printf("Fully booked\n");
+                        printf("Here are some available times\n");
+                        for (int k = 0; k < 13; k++) {
+                            printf("Time: %s\n", dailytime[k]);
+                        }
+                    } else {
+                        strcpy(reservations[p].clock, time); // Modify the time
+                        printf("Modified\n");
+                    }
+                } else {
+                    printf("No matching record found\n");
+                }
+                break;
+            }
+
+            case 3: {
+                printf("Please enter your name:");
+                scanf("%s", n);
+                printf("Please enter your phone number:");
+                scanf("%s", tell);
+
+                int found5 = 0;
+                for (int q = 0; q < l; q++) {
+                    if (strcmp(reservations[q].phone, tell) == 0 && strcmp(reservations[q].name, n) == 0) {
+                        found5 = 1;
+                        for (int r = q; r < l - 1; r++) {
+                            reservations[r] = reservations[r + 1];
+                        }
+                        l--;
+                        break;
+                    }
+                }
+
+                if (found5) {
+                    printf("Cancelled\n");
+                } else {
+                    printf("No matching record found\n");
+                }
+                break;
+            }
+
+            case 4: {
+                printf("Please enter your phone number:");
+                scanf("%s", tell);
+
+                int found6 = 0;
+                for (int s = 0; s < l; s++) {
+                    if (strcmp(reservations[s].phone, tell) == 0) {
+                        found6 = 1;
+                        printf("Name: %s\n", reservations[s].name);
+                        printf("Phone number: %s\n", reservations[s].phone);
+                        printf("Reservation date: %s\n", reservations[s].datetime);
+                        printf("Reservation time: %s o'clock\n", reservations[s].clock);
+                        break;
+                    }
+                }
+
+                if (!found6) {
+                    printf("No matching record found\n");
+                }
+                break;
+            }
+
+            default: {
+                printf("Invalid option\n");
+                break;
+            }
+        }
+    }
+
+    free(reservations);
+    return 0;
 }
